@@ -12,64 +12,54 @@
         Address           <- NearestAirport attribute (required)
           Number, Street, City, State, Zip
 
-  I used xs:sequence everywhere so the elements have to be in the same
-  left to right order as the figure. No target namespace, so the xml file
-  points at it with xsi:noNamespaceSchemaLocation.
+  I set this up the same way as the Courses.xsd example from the assignment:
+  a target namespace, a global element at the top, and named complexTypes
+  underneath it. Everything uses xsd:sequence so the elements have to be in
+  the same left to right order as the figure.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns="https://dakshdesai42.github.io/cse445-assignment4"
+   targetNamespace="https://dakshdesai42.github.io/cse445-assignment4"
+   elementFormDefault="qualified" attributeFormDefault="unqualified">
 
-  <!-- root element, holds all of the parks -->
-  <xs:element name="NationalParks">
-    <xs:complexType>
-      <xs:sequence>
+   <xsd:annotation>
+      <xsd:documentation xml:lang="en">
+       CSE 445 Assignment 4 - directory of US national parks
+      </xsd:documentation>
+   </xsd:annotation>
 
-        <!-- one of these per park, and there has to be at least one -->
-        <xs:element name="NationalPark" minOccurs="1" maxOccurs="unbounded">
-          <xs:complexType>
-            <xs:sequence>
+   <!-- the root element -->
+   <xsd:element name="NationalParks" type="NationalParksType"/>
 
-              <!-- park name, exactly one -->
-              <xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1" />
+   <!-- holds all of the parks, need at least one -->
+   <xsd:complexType name="NationalParksType">
+      <xsd:sequence>
+         <xsd:element name="NationalPark" type="NationalParkDetails" minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+   </xsd:complexType>
 
-              <!-- maxOccurs is unbounded because parks can list several numbers.
-                   kept this as a string since phone formats are all different -->
-              <xs:element name="Phone" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+   <!-- one park. Phone is unbounded because parks can list several numbers.
+        Rating is the optional attribute, so some parks have it and some don't -->
+   <xsd:complexType name="NationalParkDetails">
+      <xsd:sequence>
+         <xsd:element name="Name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="Phone" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+         <xsd:element name="Address" type="AddressType" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="Rating" type="xsd:decimal" use="optional"/>
+   </xsd:complexType>
 
-              <!-- address, exactly one -->
-              <xs:element name="Address" minOccurs="1" maxOccurs="1">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="Number" type="xs:int"    minOccurs="1" maxOccurs="1" />
-                    <xs:element name="Street" type="xs:string" minOccurs="1" maxOccurs="1" />
-                    <xs:element name="City"   type="xs:string" minOccurs="1" maxOccurs="1" />
-                    <xs:element name="State"  type="xs:string" minOccurs="1" maxOccurs="1" />
-                    <xs:element name="Zip"    type="xs:int"    minOccurs="1" maxOccurs="1" />
-                  </xs:sequence>
+   <!-- the address. NearestAirport is the required attribute, so every
+        address has to have it -->
+   <xsd:complexType name="AddressType">
+      <xsd:sequence>
+         <xsd:element name="Number" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="Street" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="City" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="State" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+         <xsd:element name="Zip" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+      </xsd:sequence>
+      <xsd:attribute name="NearestAirport" type="xsd:string" use="required"/>
+   </xsd:complexType>
 
-                  <!-- the required attribute - every address has to have this one -->
-                  <xs:attribute name="NearestAirport" type="xs:string" use="required" />
-                </xs:complexType>
-              </xs:element>
-
-            </xs:sequence>
-
-            <!-- the optional attribute - only some of my parks have a rating.
-                 restricted it to 0-5 since that's the range a rating would be in -->
-            <xs:attribute name="Rating" use="optional">
-              <xs:simpleType>
-                <xs:restriction base="xs:decimal">
-                  <xs:minInclusive value="0" />
-                  <xs:maxInclusive value="5" />
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
-
-          </xs:complexType>
-        </xs:element>
-
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-
-</xs:schema>
+</xsd:schema>

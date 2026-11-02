@@ -17,8 +17,10 @@
   before it.
 -->
 <!-- ERROR (1): this should be NationalParks, not NationalPark -->
-<NationalPark xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:noNamespaceSchemaLocation="NationalParks.xsd">
+<NationalPark
+   xmlns="https://dakshdesai42.github.io/cse445-assignment4"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="https://dakshdesai42.github.io/cse445-assignment4 https://dakshdesai42.github.io/cse445-assignment4/NationalParks.xsd">
 
   <!-- this is the example park from Figure 1 -->
   <NationalPark Rating="4.9">
